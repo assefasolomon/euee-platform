@@ -4,6 +4,8 @@ import { seedMathG12Unit1Lesson2 } from "./content/math-g12-u1-l2";
 import { seedMathG12Unit1Lesson2ArithmeticPart } from "./content/math-g12-u1-l2";
 import { seedMathG12Unit1Lesson2GeometricPart } from "./content/math-g12-u1-l2";
 import { seedMathG12Unit1Lesson2Video } from "./content/math-g12-u1-l2";
+import { seedMathG12Unit1Lesson3 } from "./content/math-g12-u1-l3";
+import { seedMathG12Unit1Lesson3Content } from "./content/math-g12-u1-l3";
 
 const prisma = new PrismaClient();
 
@@ -13,6 +15,8 @@ async function main() {
   await seedMathG12Unit1Lesson2ArithmeticPart(prisma);
   await seedMathG12Unit1Lesson2GeometricPart(prisma);
   await seedMathG12Unit1Lesson2Video(prisma);
+  await seedMathG12Unit1Lesson3(prisma);
+  await seedMathG12Unit1Lesson3Content(prisma);
   console.log("All content modules seeded successfully.");
 }
 
