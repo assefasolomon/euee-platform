@@ -1,0 +1,206 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+  CONTENT_REVIEWER
+}
+
+enum Stream {
+  NATURAL
+  SOCIAL
+  SHARED
+}
+
+model User {
+  id             String   @id @default(uuid())
+  supabaseAuthId String   @unique
+  email          String   @unique
+  fullName       String
+  role           Role     @default(STUDENT)
+  stream         Stream?
+  createdAt      DateTime @default(now())
+
+  progress     Progress[]
+  quizAttempts QuizAttempt[]
+  mastery      Mastery[]
+  streak       Streak?
+  revisionPlan RevisionScheduleItem[]
+}
+
+model Subject {
+  id     String @id @default(uuid())
+  name   String
+  stream Stream
+  order  Int
+
+  units     Unit[]
+  questions Question[]
+}
+
+model Unit {
+  id                 String   @id @default(uuid())
+  subject            Subject  @relation(fields: [subjectId], references: [id])
+  subjectId          String
+  gradeLevel         Int
+  order              Int
+  title              String
+  prerequisiteUnitId String?
+  conceptTags        String[]
+
+  lessons      Lesson[]
+  chapterExams ChapterExam[]
+}
+
+model Lesson {
+  id                   String   @id @default(uuid())
+  unit                 Unit     @relation(fields: [unitId], references: [id])
+  unitId               String
+  order                Int
+  title                String
+  difficultyTier       Int      @default(1)
+  learningObjectives   String[]
+  summaryMd            String?
+  additionalExamplesMd String?
+
+  subLessons SubLesson[]
+  videoRecs  VideoRecommendation[]
+}
+
+model SubLesson {
+  id               String   @id @default(uuid())
+  lesson           Lesson   @relation(fields: [lessonId], references: [id])
+  lessonId         String
+  order            Int
+  title            String
+  contentMd        String
+  commonMistakesMd String?
+
+  knowledgeCheckQuestions Question[] @relation("SubLessonKnowledgeCheck")
+}
+
+model VideoRecommendation {
+  id              String  @id @default(uuid())
+  lesson          Lesson  @relation(fields: [lessonId], references: [id])
+  lessonId        String
+  youtubeUrl      String
+  title           String
+  reasonMd        String
+  language        String  @default("en")
+  reviewedByAdmin Boolean @default(false)
+}
+
+enum QuestionSource {
+  ORIGINAL
+  PAST_EXAM_STYLE
+  OFFICIAL_LINKED
+}
+
+model Question {
+  id                 String         @id @default(uuid())
+  subject            Subject        @relation(fields: [subjectId], references: [id])
+  subjectId          String
+  subLesson          SubLesson?     @relation("SubLessonKnowledgeCheck", fields: [subLessonId], references: [id])
+  subLessonId        String?
+  conceptTags        String[]
+  difficulty         Int
+  source             QuestionSource @default(ORIGINAL)
+  chapterReviewOrder Int?
+
+  stem                String
+  options             Json
+  correctOptionId     String
+  explanationCorrect  String
+  explanationsWrong   Json
+  commonMistakes      String
+  hints               Json
+
+  quizAttempts         QuizAttempt[]
+  chapterExamQuestions ChapterExamQuestion[]
+}
+
+model ChapterExam {
+  id                  String @id @default(uuid())
+  unit                Unit   @relation(fields: [unitId], references: [id])
+  unitId              String
+  targetQuestionCount Int    @default(100)
+
+  questions ChapterExamQuestion[]
+}
+
+model ChapterExamQuestion {
+  chapterExam   ChapterExam @relation(fields: [chapterExamId], references: [id])
+  chapterExamId String
+  question      Question    @relation(fields: [questionId], references: [id])
+  questionId    String
+  order         Int
+
+  @@id([chapterExamId, questionId])
+}
+
+enum ProgressStatus {
+  LOCKED
+  UNLOCKED
+  COMPLETED
+}
+
+model Progress {
+  id          String         @id @default(uuid())
+  user        User           @relation(fields: [userId], references: [id])
+  userId      String
+  lessonId    String
+  status      ProgressStatus @default(LOCKED)
+  completedAt DateTime?
+
+  @@unique([userId, lessonId])
+}
+
+model QuizAttempt {
+  id             String   @id @default(uuid())
+  user           User     @relation(fields: [userId], references: [id])
+  userId         String
+  question       Question @relation(fields: [questionId], references: [id])
+  questionId     String
+  chosenOptionId String
+  correct        Boolean
+  attemptNo      Int      @default(1)
+  hintsUsed      Int      @default(0)
+  timestamp      DateTime @default(now())
+}
+
+model Mastery {
+  id             String   @id @default(uuid())
+  user           User     @relation(fields: [userId], references: [id])
+  userId         String
+  conceptTag     String
+  strengthScore  Float    @default(0)
+  lastReviewedAt DateTime @default(now())
+
+  @@unique([userId, conceptTag])
+}
+
+model Streak {
+  user           User      @relation(fields: [userId], references: [id])
+  userId         String    @id
+  currentStreak  Int       @default(0)
+  longestStreak  Int       @default(0)
+  lastActiveDate DateTime?
+}
+
+model RevisionScheduleItem {
+  id           String   @id @default(uuid())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  conceptTag   String
+  scheduledFor DateTime
+  reason       String
+  completed    Boolean  @default(false)
+}
