@@ -1,0 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #F6F4EC;
+  color: #12241F;
+  font-family: "IBM Plex Sans", sans-serif;
+}
+
+.woven-path {
+  background-image: repeating-linear-gradient(
+    135deg,
+    #0E4F4A 0px, #0E4F4A 6px,
+    #D9A441 6px, #D9A441 10px,
+    #0E4F4A 10px, #0E4F4A 16px
+  );
+}
+
+.woven-path--muted {
+  background-image: repeating-linear-gradient(
+    135deg,
+    #E4DFCF 0px, #E4DFCF 6px,
+    #f0ede2 6px, #f0ede2 10px,
+    #E4DFCF 10px, #E4DFCF 16px
+  );
+}
