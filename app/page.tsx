@@ -21,6 +21,7 @@ export default async function HomePage() {
         orderBy: [{ gradeLevel: "asc" }, { order: "asc" }],
         include: {
           lessons: { orderBy: { order: "asc" }, select: { id: true, title: true, order: true } },
+          chapterExams: { select: { id: true, targetQuestionCount: true, questions: { select: { id: true } } } },
         },
       },
     },
@@ -57,6 +58,7 @@ export default async function HomePage() {
               <section key={subject.id}>
                 <h2 className="font-display text-xl font-semibold text-teal-deep mb-3">{subject.name}</h2>
                 {subject.units.map(function(unit) {
+                  const exam = unit.chapterExams.length > 0 ? unit.chapterExams[0] : null;
                   return (
                     <div key={unit.id} className="mb-5 rounded-lg border border-line bg-panel p-4">
                       <p className="font-mono text-[11px] uppercase tracking-wide text-ink/50">Grade {unit.gradeLevel}</p>
@@ -75,6 +77,14 @@ export default async function HomePage() {
                           );
                         })}
                       </ul>
+                      {exam && (
+                        <div className="mt-3 pt-3 border-t border-line flex items-center justify-between">
+                          <a href={"/reviews/" + exam.id} className="text-xs font-mono uppercase tracking-wide text-gold underline underline-offset-4">
+                            Chapter review practice
+                          </a>
+                          <span className="text-xs font-mono text-ink/40">{exam.questions.length}/{exam.targetQuestionCount}</span>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
