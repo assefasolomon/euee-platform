@@ -21,7 +21,7 @@ export default async function HomePage() {
         orderBy: [{ gradeLevel: "asc" }, { order: "asc" }],
         include: {
           lessons: { orderBy: { order: "asc" }, select: { id: true, title: true, order: true } },
-          chapterExams: { select: { id: true, targetQuestionCount: true, questions: { select: { id: true } } } },
+          chapterExams: { select: { id: true, targetQuestionCount: true, questions: { select: { questionId: true } } } },
         },
       },
     },
