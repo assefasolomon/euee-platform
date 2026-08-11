@@ -10,6 +10,7 @@ import { seedMathG12Unit1Lesson4 } from "./content/math-g12-u1-l4";
 import { seedMathG12Unit1Lesson4Content } from "./content/math-g12-u1-l4";
 import { seedMathG12Unit1Lesson5 } from "./content/math-g12-u1-l5";
 import { seedMathG12Unit1Lesson5Content } from "./content/math-g12-u1-l5";
+import { seedMathG12Unit1ChapterReviewPart1 } from "./content/math-g12-u1-chapter-review";
 
 const prisma = new PrismaClient();
 
@@ -25,6 +26,7 @@ async function main() {
   await seedMathG12Unit1Lesson4Content(prisma);
   await seedMathG12Unit1Lesson5(prisma);
   await seedMathG12Unit1Lesson5Content(prisma);
+  await seedMathG12Unit1ChapterReviewPart1(prisma);
   console.log("All content modules seeded successfully.");
 }
 
