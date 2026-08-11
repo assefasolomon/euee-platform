@@ -246,3 +246,86 @@ export async function seedMathG12Unit1ChapterReviewPart2(prisma) {
 
   console.log("Math G12 Unit 1 Chapter Review Part 2: OK - 7 questions (Lesson 5 applications plus varied coverage). Total bank now at 17 questions.");
 }
+
+export async function seedMathG12Unit1ChapterReviewPart3(prisma) {
+  const math = await prisma.subject.findUnique({ where: { id: "math-natural" } });
+  const exam = await prisma.chapterExam.findUnique({ where: { id: "math-g12-u1-review" } });
+
+  const questions = [
+    {
+      id: "math-g12-u1-review-q18", order: 18, difficulty: 1, tags: ["sequences"],
+      stem: "Given a_n = n/(n+1), what is a_2?",
+      options: [{ id: "A", text: "2/3" }, { id: "B", text: "1/2" }, { id: "C", text: "3/2" }, { id: "D", text: "2" }],
+      correctOptionId: "A",
+      explanationCorrect: "Substitute n=2: a_2 = 2/(2+1) = 2/3.",
+      explanationsWrong: { B: "This is a_1 = 1/2, not a_2.", C: "Inverts the numerator and denominator.", D: "Does not correctly apply the general term formula." },
+      commonMistakes: "Confusing which term is being asked for, or inverting the fraction.",
+      hints: ["Substitute n=2 into both the numerator and denominator.", "Denominator is n+1, so 2+1=3."],
+    },
+    {
+      id: "math-g12-u1-review-q19", order: 19, difficulty: 2, tags: ["arithmetic_sequence"],
+      stem: "The first term of an arithmetic sequence is 20 and the 10th term is 65. What is the common difference d?",
+      options: [{ id: "A", text: "5" }, { id: "B", text: "4.5" }, { id: "C", text: "4" }, { id: "D", text: "9" }],
+      correctOptionId: "A",
+      explanationCorrect: "a_10 = a_1 + 9d, so 65 = 20 + 9d, giving 9d = 45, so d = 5.",
+      explanationsWrong: { B: "Uses 10 steps instead of 9 steps between term 1 and term 10.", C: "Does not satisfy the equation when checked.", D: "This is the number of steps (9), not the value of d." },
+      commonMistakes: "Using 10 steps instead of 9 steps between the first and tenth terms.",
+      hints: ["From a_1 to a_10 is 9 steps, not 10.", "Set up 65 = 20 + 9d and solve for d."],
+    },
+    {
+      id: "math-g12-u1-review-q20", order: 20, difficulty: 2, tags: ["geometric_sequence"],
+      stem: "A geometric sequence has terms 81, 27, 9, 3... What is the common ratio r?",
+      options: [{ id: "A", text: "3" }, { id: "B", text: "1/3" }, { id: "C", text: "-3" }, { id: "D", text: "9" }],
+      correctOptionId: "B",
+      explanationCorrect: "Divide consecutive terms: 27/81 = 1/3, 9/27 = 1/3, 3/9 = 1/3. Common ratio is 1/3, the sequence is shrinking.",
+      explanationsWrong: { A: "Inverts the ratio; this sequence is decreasing, not increasing.", C: "Introduces an incorrect negative sign not present in the actual pattern.", D: "Does not match the actual ratio between consecutive terms." },
+      commonMistakes: "Dividing terms in the wrong order (earlier term over later term instead of later over earlier), which inverts the ratio.",
+      hints: ["Divide a later term by the one right before it, in that order.", "27 divided by 81 is less than 1, since the sequence is shrinking."],
+    },
+    {
+      id: "math-g12-u1-review-q21", order: 21, difficulty: 3, tags: ["sigma_notation", "geometric_sequence"],
+      stem: "What is the value of the sum from n=1 to 4 of (3 * 2^(n-1))? (This sums the first 4 terms of a geometric sequence.)",
+      options: [{ id: "A", text: "45" }, { id: "B", text: "48" }, { id: "C", text: "36" }, { id: "D", text: "24" }],
+      correctOptionId: "A",
+      explanationCorrect: "Expand: n=1 gives 3, n=2 gives 6, n=3 gives 12, n=4 gives 24. Sum: 3+6+12+24 = 45.",
+      explanationsWrong: { B: "Does not match the correctly expanded sum.", C: "An undercount, possibly missing the last term.", D: "This is just the last term, not the full sum." },
+      commonMistakes: "Stopping the sum too early, or making an error in one of the expanded term calculations.",
+      hints: ["Expand each term individually first: substitute n=1, 2, 3, 4.", "Each term is 3 times 2 raised to (n-1)."],
+    },
+    {
+      id: "math-g12-u1-review-q22", order: 22, difficulty: 2, tags: ["applications", "arithmetic_sequence"],
+      stem: "A parking garage has 5 levels, and level 1 has 40 spaces. Each level above has 8 fewer spaces than the one below it. How many spaces are on level 4?",
+      options: [{ id: "A", text: "24 spaces" }, { id: "B", text: "16 spaces" }, { id: "C", text: "32 spaces" }, { id: "D", text: "8 spaces" }],
+      correctOptionId: "B",
+      explanationCorrect: "a_1=40, d=-8. Level 4 is a_4: a_4 = 40 + (4-1)(-8) = 40 - 24 = 16 spaces.",
+      explanationsWrong: { A: "Does not match the correctly computed value of 16.", C: "Overshoots the correct value; possibly forgot the negative sign on d.", D: "Undershoots the correct value." },
+      commonMistakes: "Sign errors when handling a negative common difference.",
+      hints: ["d is negative here (spaces decrease), so you are subtracting.", "Level 4 uses (n-1)=3 steps of d from level 1."],
+    },
+  ];
+
+  for (const q of questions) {
+    await prisma.question.upsert({
+      where: { id: q.id },
+      update: {
+        options: q.options, correctOptionId: q.correctOptionId,
+        explanationCorrect: q.explanationCorrect, explanationsWrong: q.explanationsWrong,
+        commonMistakes: q.commonMistakes, hints: q.hints,
+      },
+      create: {
+        id: q.id, subjectId: math.id, conceptTags: q.tags, difficulty: q.difficulty, source: QuestionSource.ORIGINAL,
+        chapterReviewOrder: q.order,
+        stem: q.stem, options: q.options, correctOptionId: q.correctOptionId,
+        explanationCorrect: q.explanationCorrect, explanationsWrong: q.explanationsWrong,
+        commonMistakes: q.commonMistakes, hints: q.hints,
+      },
+    });
+    await prisma.chapterExamQuestion.upsert({
+      where: { chapterExamId_questionId: { chapterExamId: exam.id, questionId: q.id } },
+      update: {},
+      create: { chapterExamId: exam.id, questionId: q.id, order: q.order },
+    });
+  }
+
+  console.log("Math G12 Unit 1 Chapter Review Part 3: OK - 5 questions. Total bank now at 22 questions.");
+}
