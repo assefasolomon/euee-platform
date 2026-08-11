@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import QuizQuestion from "@/components/QuizQuestion";
+import SequenceGraph from "@/components/SequenceGraph";
 
 export default async function LessonPage(props) {
   const params = await props.params;
@@ -52,6 +53,10 @@ export default async function LessonPage(props) {
   const nextLessonStatus = nextLesson ? (progressByLessonId[nextLesson.id] || "LOCKED") : null;
   const nextIsAvailable = nextLesson && (nextLessonStatus === "UNLOCKED" || nextLessonStatus === "COMPLETED");
 
+  const sequenceGraphPoints = [
+    { n: 1, value: 200 }, { n: 2, value: 350 }, { n: 3, value: 500 }, { n: 4, value: 650 }, { n: 5, value: 800 },
+  ];
+
   return (
     <main className="min-h-screen bg-paper">
       <div className="h-2 woven-path" />
@@ -96,6 +101,13 @@ export default async function LessonPage(props) {
               <div className="prose prose-slate max-w-none font-body text-[15px] leading-relaxed text-ink/90 whitespace-pre-wrap">
                 {sub.contentMd}
               </div>
+              {lesson.id === "math-g12-u1-l1" && sub.order === 1 && (
+                <div className="mt-4">
+                  <p className="font-mono text-[11px] uppercase tracking-wide text-ink/50 mb-2">Visual: the equb sequence graphed</p>
+                  <SequenceGraph points={sequenceGraphPoints} />
+                  <p className="text-xs text-ink/60 mt-2">Notice the points are separate dots, not connected by a line, since n only takes whole-number values like 1, 2, 3.</p>
+                </div>
+              )}
               {sub.commonMistakesMd && (
                 <div className="mt-4 rounded border-l-4 border-gold bg-gold/5 px-4 py-3">
                   <p className="font-mono text-[11px] uppercase tracking-wide text-gold mb-1">Common mistakes</p>
