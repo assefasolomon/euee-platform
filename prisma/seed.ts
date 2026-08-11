@@ -8,6 +8,8 @@ import { seedMathG12Unit1Lesson3 } from "./content/math-g12-u1-l3";
 import { seedMathG12Unit1Lesson3Content } from "./content/math-g12-u1-l3";
 import { seedMathG12Unit1Lesson4 } from "./content/math-g12-u1-l4";
 import { seedMathG12Unit1Lesson4Content } from "./content/math-g12-u1-l4";
+import { seedMathG12Unit1Lesson5 } from "./content/math-g12-u1-l5";
+import { seedMathG12Unit1Lesson5Content } from "./content/math-g12-u1-l5";
 
 const prisma = new PrismaClient();
 
@@ -21,6 +23,8 @@ async function main() {
   await seedMathG12Unit1Lesson3Content(prisma);
   await seedMathG12Unit1Lesson4(prisma);
   await seedMathG12Unit1Lesson4Content(prisma);
+  await seedMathG12Unit1Lesson5(prisma);
+  await seedMathG12Unit1Lesson5Content(prisma);
   console.log("All content modules seeded successfully.");
 }
 
