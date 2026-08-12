@@ -37,10 +37,11 @@ model User {
 }
 
 model Subject {
-  id     String @id @default(uuid())
-  name   String
-  stream Stream
-  order  Int
+  id          String  @id @default(uuid())
+  name        String
+  stream      Stream
+  order       Int
+  isPublished Boolean @default(false)
 
   units     Unit[]
   questions Question[]
