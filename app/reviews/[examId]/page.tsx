@@ -68,7 +68,7 @@ export default async function ChapterReviewPage(props) {
         </div>
 
         <div className="mt-10 border-t border-line pt-6">
-          <a href="/" className="text-sm font-body text-teal underline underline-offset-4">&larr; Back to dashboard</a>
+          <a href="/dashboard" className="text-sm font-body text-teal underline underline-offset-4">&larr; Back to dashboard</a>
         </div>
       </div>
     </main>

@@ -181,7 +181,7 @@ export default async function LessonPage(props) {
               &larr; {prevLesson.title}
             </a>
           ) : (
-            <a href="/" className="text-sm font-body text-teal underline underline-offset-4">&larr; Back to dashboard</a>
+            <a href="/dashboard" className="text-sm font-body text-teal underline underline-offset-4">&larr; Back to dashboard</a>
           )}
 
           {nextLesson ? (
