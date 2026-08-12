@@ -62,7 +62,7 @@ export default async function HomePage() {
                   return (
                     <div key={unit.id} className="mb-5 rounded-lg border border-line bg-panel p-4">
                       <p className="font-mono text-[11px] uppercase tracking-wide text-ink/50">Grade {unit.gradeLevel}</p>
-                      <h3 className="font-body font-semibold text-ink mb-2">{unit.title}</h3>
+                      <h3 className="font-body font-semibold text-ink mb-2">Unit {unit.order} - {unit.title}</h3>
                       <ul className="flex flex-col gap-1">
                         {unit.lessons.map(function(lesson, idx) {
                           const lessonUrl = "/lessons/" + lesson.id;

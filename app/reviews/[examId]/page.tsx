@@ -36,7 +36,7 @@ export default async function ChapterReviewPage(props) {
       <div className="mx-auto max-w-3xl px-6 py-10">
         <header className="mb-8">
           <p className="font-mono text-xs uppercase tracking-wide text-teal/70">
-            {exam.unit.subject.name} - Grade {exam.unit.gradeLevel} - {exam.unit.title}
+            {exam.unit.subject.name} - Grade {exam.unit.gradeLevel} - Unit {exam.unit.order} - {exam.unit.title}
           </p>
           <h1 className="font-display text-3xl font-semibold text-ink mt-1">Chapter Review</h1>
           <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3 py-1">

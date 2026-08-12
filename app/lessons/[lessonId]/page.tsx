@@ -64,11 +64,12 @@ export default async function LessonPage(props) {
         <header className="mb-6">
           <div className="flex items-center justify-between">
             <p className="font-mono text-xs uppercase tracking-wide text-teal/70">
-              {lesson.unit.subject.name} - Grade {lesson.unit.gradeLevel} - {lesson.unit.title}
+              {lesson.unit.subject.name} - Grade {lesson.unit.gradeLevel} - Unit {lesson.unit.order} - {lesson.unit.title}
             </p>
             <span className={"text-xs font-mono " + statusColor}>{statusLabel}</span>
           </div>
           <h1 className="font-display text-3xl font-semibold text-ink mt-1">{lesson.title}</h1>
+          <p className="text-xs font-mono text-ink/40 mt-1">Lesson {lesson.order} of {allLessonsInUnit.length}</p>
           <div className="flex items-center gap-1.5 mt-4">
             {allLessonsInUnit.map(function(l) {
               return (
