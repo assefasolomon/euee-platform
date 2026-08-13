@@ -24,6 +24,11 @@ import { seedMathG12Unit2Lesson4Content } from "./content/math-g12-u2-l4";
 import { seedMathG12Unit2Lesson4Questions } from "./content/math-g12-u2-l4";
 import { seedMathG12Unit2Lesson5 } from "./content/math-g12-u2-l5";
 import { seedMathG12Unit2Lesson5Content } from "./content/math-g12-u2-l5";
+import { seedMathG12Unit2ChapterReviewPart1 } from "./content/math-g12-u2-chapter-review";
+import { seedMathG12Unit2ChapterReviewPart2 } from "./content/math-g12-u2-chapter-review";
+import { seedMathG12Unit2ChapterReviewPart3 } from "./content/math-g12-u2-chapter-review";
+import { seedMathG12Unit2ChapterReviewPart4 } from "./content/math-g12-u2-chapter-review";
+import { seedMathG12Unit2ChapterReviewPart5 } from "./content/math-g12-u2-chapter-review";
 
 const prisma = new PrismaClient();
 
@@ -53,6 +58,11 @@ async function main() {
   await seedMathG12Unit2Lesson4Questions(prisma);
   await seedMathG12Unit2Lesson5(prisma);
   await seedMathG12Unit2Lesson5Content(prisma);
+  await seedMathG12Unit2ChapterReviewPart1(prisma);
+  await seedMathG12Unit2ChapterReviewPart2(prisma);
+  await seedMathG12Unit2ChapterReviewPart3(prisma);
+  await seedMathG12Unit2ChapterReviewPart4(prisma);
+  await seedMathG12Unit2ChapterReviewPart5(prisma);
   console.log("All content modules seeded successfully.");
 }
 
