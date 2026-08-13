@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import QuizQuestion from "@/components/QuizQuestion";
 import SequenceGraph from "@/components/SequenceGraph";
+import TangentLineGraph from "@/components/TangentLineGraph";
 
 export default async function LessonPage(props) {
   const params = await props.params;
@@ -107,6 +108,13 @@ export default async function LessonPage(props) {
                   <p className="font-mono text-[11px] uppercase tracking-wide text-ink/50 mb-2">Visual: the equb sequence graphed</p>
                   <SequenceGraph points={sequenceGraphPoints} />
                   <p className="text-xs text-ink/60 mt-2">Notice the points are separate dots, not connected by a line, since n only takes whole-number values like 1, 2, 3.</p>
+                </div>
+              )}
+{lesson.id === "math-g12-u2-l4" && sub.order === 1 && (
+                <div className="mt-4">
+                  <p className="font-mono text-[11px] uppercase tracking-wide text-ink/50 mb-2">Visual: curve and tangent line</p>
+                  <TangentLineGraph />
+                  <p className="text-xs text-ink/60 mt-2">The teal curve is f(x) = x^2 - 3. The dashed gold line is the tangent at x=2, touching the curve at exactly one point (marked in red), matching the worked example.</p>
                 </div>
               )}
               {sub.commonMistakesMd && (
