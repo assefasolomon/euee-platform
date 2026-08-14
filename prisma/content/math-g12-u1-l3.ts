@@ -126,3 +126,76 @@ export async function seedMathG12Unit1Lesson3Content(prisma) {
 
   console.log("Math G12 Unit 1 Lesson 3, Sigma Notation content: OK - 1 sub-lesson, 4 questions, 1 video placeholder (needs review).");
 }
+
+export async function seedMathG12Unit1Lesson3GeometricSum(prisma) {
+  const math = await prisma.subject.findUnique({ where: { id: "math-natural" } });
+  const lesson3 = await prisma.lesson.findUnique({ where: { id: "math-g12-u1-l3" } });
+
+  const s3b = await prisma.subLesson.upsert({
+    where: { id: "math-g12-u1-l3-s2" },
+    update: {},
+    create: {
+      id: "math-g12-u1-l3-s2", lessonId: lesson3.id, order: 2, title: "Sum of a Finite Geometric Series",
+      contentMd: "You've already learned the arithmetic series shortcut in the previous section. Geometric sequences from Lesson 2 have their own sum formula, derived using a clever algebraic trick.\n\nIf a geometric sequence has first term G1 and common ratio r, the sum of its first n terms is: S_n = G1(1 - r^n) / (1 - r), valid whenever r is not equal to 1.\n\nWhere this formula comes from: write out S_n = G1 + G1*r + G1*r^2 + ... + G1*r^(n-1). Multiply every term by r to get r*S_n = G1*r + G1*r^2 + ... + G1*r^n. Subtracting these two equations, almost every term cancels, leaving (1-r)*S_n = G1(1 - r^n), which rearranges into the formula above.\n\nWorked Example: find the sum of the first 5 terms of a geometric sequence with G1=2, r=2. S_5 = 2*(1-2^5)/(1-2) = 2*(1-32)/(-1) = 2*(-31)/(-1) = 62.\n\nWorked Example 2: find the sum of the first 4 terms where G1=1, r=2/3. S_4 = 1*(1-(2/3)^4)/(1-2/3) = (1 - 16/81)/(1/3) = (65/81) * 3 = 65/27.\n\nThis is different from the infinite series formula in the next lesson: this formula works for any finite number of terms n, and any r except r=1, while the infinite version only works when |r| is strictly less than 1.",
+      commonMistakesMd: "Confusing this finite-sum formula with the infinite-series formula from the next lesson, they look similar but apply to different situations; forgetting the formula is undefined when r=1 (since you'd divide by zero), a constant sequence needs to be summed by direct multiplication instead: S_n = n*G1.",
+    },
+  });
+
+  const questions = [
+    {
+      id: "math-g12-u1-l3-q2", difficulty: 2,
+      stem: "Find the sum of the first 4 terms of a geometric sequence with G1=3 and r=2.",
+      options: [{ id: "A", text: "45" }, { id: "B", text: "48" }, { id: "C", text: "24" }, { id: "D", text: "36" }],
+      correctOptionId: "A",
+      explanationCorrect: "S_4 = 3*(1-2^4)/(1-2) = 3*(1-16)/(-1) = 3*(-15)/(-1) = 45.",
+      explanationsWrong: { B: "An arithmetic error in applying the formula.", C: "This is just the 4th term times something, not the actual sum formula result.", D: "Does not match the correctly applied formula." },
+      commonMistakes: "Sign errors when the numerator and denominator are both negative, remember two negatives divide to a positive.",
+      hints: ["Substitute G1=3, r=2, n=4 into S_n = G1(1-r^n)/(1-r).", "2^4 = 16; work through the negative signs carefully."],
+    },
+    {
+      id: "math-g12-u1-l3-q3", difficulty: 2,
+      stem: "Which formula correctly gives the sum of the first n terms of a geometric sequence (r not equal to 1)?",
+      options: [
+        { id: "A", text: "S_n = G1(1-r^n)/(1-r)" },
+        { id: "B", text: "S_n = n/2 * (G1 + G_n)" },
+        { id: "C", text: "S_n = G1 + (n-1)r" },
+        { id: "D", text: "S_n = G1 * r^(n-1)" },
+      ],
+      correctOptionId: "A",
+      explanationCorrect: "This is the correct finite geometric series sum formula, derived by the subtraction method shown in this lesson.",
+      explanationsWrong: { B: "This is actually the arithmetic series sum formula, not geometric.", C: "This resembles the arithmetic sequence general term formula, not a sum formula at all.", D: "This is the geometric sequence general term formula (for a single term), not the sum of many terms." },
+      commonMistakes: "Confusing the geometric sum formula with the arithmetic sum formula, or with the general term formulas from earlier lessons.",
+      hints: ["The arithmetic sum formula averages the first and last term; this one doesn't do that.", "This formula specifically involves r raised to the power n."],
+    },
+    {
+      id: "math-g12-u1-l3-q4", difficulty: 3,
+      stem: "A geometric sequence has G1=5 and r=3. How many terms are needed for the sum to first exceed 600?",
+      options: [{ id: "A", text: "5 terms" }, { id: "B", text: "6 terms" }, { id: "C", text: "4 terms" }, { id: "D", text: "7 terms" }],
+      correctOptionId: "A",
+      explanationCorrect: "S_n = 5(1-3^n)/(1-3) = 5(3^n-1)/2. Testing n=5: S_5 = 5(243-1)/2 = 5(242)/2 = 605, which exceeds 600. Testing n=4: S_4=5(81-1)/2=200, not yet over 600. So 5 terms are needed.",
+      explanationsWrong: { B: "6 terms would also exceed 600, but 5 is already sufficient, the question asks for the first n that works.", C: "S_4=200 does not yet exceed 600.", D: "Overshoots; fewer terms already suffice." },
+      commonMistakes: "Not checking the boundary case (n and n-1) carefully to find the exact first n that satisfies the condition.",
+      hints: ["Compute S_n for increasing values of n until you find one exceeding 600.", "Check n=4 first, then n=5, to find the transition point."],
+    },
+  ];
+
+  for (const q of questions) {
+    await prisma.question.upsert({
+      where: { id: q.id },
+      update: {
+        options: q.options, correctOptionId: q.correctOptionId,
+        explanationCorrect: q.explanationCorrect, explanationsWrong: q.explanationsWrong,
+        commonMistakes: q.commonMistakes, hints: q.hints,
+      },
+      create: {
+        id: q.id, subjectId: math.id, subLessonId: s3b.id,
+        conceptTags: ["geometric_sequence", "finite_geometric_series"], difficulty: q.difficulty, source: QuestionSource.ORIGINAL,
+        stem: q.stem, options: q.options, correctOptionId: q.correctOptionId,
+        explanationCorrect: q.explanationCorrect, explanationsWrong: q.explanationsWrong,
+        commonMistakes: q.commonMistakes, hints: q.hints,
+      },
+    });
+  }
+
+  console.log("Math G12 Unit 1 Lesson 3, Sum of Finite Geometric Series (missing content, now added): OK - 1 sub-lesson, 3 questions.");
+}
